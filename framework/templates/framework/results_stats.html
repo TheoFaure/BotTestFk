@@ -76,9 +76,9 @@
     <div>The overall robustness is {{ general_robustness }}</div>
     </table>
     <div id="hints">
-        <div>The column below "Original" means the number of mutants that have this "line_intent" for answer.</div>
-        <div>The line next to "Mutant" means the number of mutants that should have "col_intent" for answer.</div>
-        <div>The middle numbers shows the number of mutants that should be classified as "col_intent" and are classified
+        <div>The column below "Original" means the number of adversaries that have this "line_intent" for answer.</div>
+        <div>The line next to "Adversaries" means the number of adversaries that should have "col_intent" for answer.</div>
+        <div>The middle numbers shows the number of adversaries that should be classified as "col_intent" and are classified
         as "line_intent".</div>
         <div>The last line show the robustness rate for each intent: the percentage of correctly classified utterances.</div>
     </div>
@@ -89,7 +89,7 @@
     <tr>
     <th scope="col">Strategy</th>
     <th scope="col">Intent Robustness</th>
-    <th scope="col">Nb Mutants</th>
+    <th scope="col">Nb Adversaries</th>
     </tr>
         {% for s, intent_r, nb_mut in rob_per_strat %}
             <tr>
