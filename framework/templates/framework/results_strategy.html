@@ -1,0 +1,23 @@
+{% extends "framework/base.html" %}
+{% block title %}Results strategies - BotTestFk{% endblock %}
+
+{% block content %}
+    <h1>Strategy {{ strategy.name }}</h1>
+    <div>Utterances that have mutants made with {{ strategy.name }}.</div>
+    <table border="1">
+        <tr>
+        <th scope="col">Utterance</th>
+        <th scope="col">Intent robustness</th>
+        <th scope="col">Entity robustness</th>
+        </tr>
+
+    {% for u, intent in utterances %}
+        <tr>
+            <td><a href="{% url 'results_utterance' u.id %}"> {{ u.sentence }}</a></td>
+            <td>{{ intent }}</td>
+            <td>{{ u.entity_robustness }}</td>
+        </tr>
+    {% endfor %}
+    </table>
+    <a href="/framework/results_stats">See general results</a>
+{% endblock %}

@@ -1,0 +1,31 @@
+
+{% extends "framework/base.html" %}
+{% block title %}Get mutants answers - BotTestFk{% endblock %}
+
+{% block content %}
+
+<table id="missing_ans">
+    <tr>
+    <th scope="col">Strategy</th>
+    <th scope="col">Nb mutants</th>
+    <th scope="col">With answer</th>
+    <th scope="col">Without answer</th>
+    </tr>
+        {% for s in strategies%}
+            <tr>
+            <td>{{ s }}</td>
+            <td>{{ s.mutant_set.count }}</td>
+            <td>{{ s.nb_mut_ans }}</td>
+            <td>{{ s.nb_mut_without_ans }}</td>
+            </tr>
+        {% endfor %}
+</table>
+
+<form action="/framework/mutants_answers/" method="POST">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Submit" />
+</form>
+
+
+{% endblock %}

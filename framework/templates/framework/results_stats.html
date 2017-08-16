@@ -1,0 +1,102 @@
+
+{% extends "framework/base.html" %}
+
+{% block title %}Results general - BotTestFk{% endblock %}
+
+{#{% block content %}#}
+{#    <h1>Results</h1>#}
+{##}
+{#    <table id="intent_robustness">#}
+{#    <tr>#}
+{#    <th scope="col">Intent</th>#}
+{#    <th scope="col">Intent Robustness</th>#}
+{#    <th scope="col">Nb mutants with answer</th>#}
+{#    </tr>#}
+{#        {% for i in intents%}#}
+{#            <tr>#}
+{#            <td>{{ i }}</td>#}
+{#            <td>{{ i.robustness }}</td>#}
+{#            <td>{{ i.nb_mut_ans }}</td>#}
+{#            </tr>#}
+{#        {% endfor %}#}
+{#    </table>#}
+{##}
+{#    <table id="strategy_robustness">#}
+{#    <tr>#}
+{#    <th scope="col">Strategy</th>#}
+{#    <th scope="col">Intent Robustness</th>#}
+{#    <th scope="col">Nb mutants with answer</th>#}
+{#    </tr>#}
+{#        {% for s in strategies%}#}
+{#            <tr>#}
+{#            <td>{{ s }}</td>#}
+{#            <td>{{ s.intent_robustness }}</td>#}
+{#            <td>{{ s.nb_mut_ans }}</td>#}
+{#            </tr>#}
+{#        {% endfor %}#}s
+{#    </table>#}
+{##}
+{#    <a href="/framework/results_detailed">See detailed results</a>#}
+{#{% endblock %}#}
+
+{% block content %}
+    <h1>Results</h1>
+
+    <div>Our study is based on {{ nb_utt }} utterances distrubuted over the intents as follows:
+    <table id="utterances" border="1" style="border: 1px solid black; border-collapse: collapse;">
+        <tr>
+            <th scope="col">Intent</th>
+            <th scope="col">Nb of expected intent</th>
+            <th scope="col">Nb of answer intent</th>
+            <th scope="col">Accuracy</th>
+        </tr>
+        {% for line in nb_utt_per_int %}
+            <tr>
+                {% for col in line %}
+                    <td scope="col">{{ col }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+    The general accuracy is <b>{{ general_accuracy }}</b>.
+    After this point, all the results are compted using the real answers (not the expected).
+    </div>
+
+    <h2>Per intent</h2>
+    <table id="intent_robustness"
+           style="border: 1px solid black; border-collapse: collapse;"
+           border="1" >
+    {% for line in tab %}
+        <tr>
+            {% for col in line %}
+                <td scope="col">{{ col }}</td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+    <div>The overall robustness is {{ general_robustness }}</div>
+    </table>
+    <div id="hints">
+        <div>The column below "Original" means the number of mutants that have this "line_intent" for answer.</div>
+        <div>The line next to "Mutant" means the number of mutants that should have "col_intent" for answer.</div>
+        <div>The middle numbers shows the number of mutants that should be classified as "col_intent" and are classified
+        as "line_intent".</div>
+        <div>The last line show the robustness rate for each intent: the percentage of correctly classified utterances.</div>
+    </div>
+
+
+    <h2>Per strategy</h2>
+    <table id="strategy_robustness">
+    <tr>
+    <th scope="col">Strategy</th>
+    <th scope="col">Intent Robustness</th>
+    <th scope="col">Nb Mutants</th>
+    </tr>
+        {% for s, intent_r, nb_mut in rob_per_strat %}
+            <tr>
+                <td><a href="{% url 'results_strategy' s.id %}"> {{ s.name}}</a></td>
+                <td>{{ intent_r }}</td>
+                <td>{{ nb_mut }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

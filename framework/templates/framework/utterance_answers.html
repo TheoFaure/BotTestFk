@@ -1,0 +1,9 @@
+
+{% extends "framework/base.html" %}
+{% block title %}Get answers - BotTestFk{% endblock %}
+
+{% block content %}
+<span id="nb_missing_answers">{{ nb_missing_answers }}</span> missing answers.
+<button onclick="compute_utt_answers()">Compute missing answers</button>
+<span id="error"></span>
+{% endblock %}

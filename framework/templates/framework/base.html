@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>
+    {% block title %}Bot Testing framework{% endblock %}
+    </title>
+    {% load staticfiles %}
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="{% static '/framework/js/myscript.js' %}"></script>
+</head>
+<body>
+
+{% block nav %}
+<ul id="nav">
+    <li><a href="/framework/manage_utterances">Manage the utterances</a></li>
+    <li><a href="/framework/utterance_answers">Get the answers for the utterances</a></li>
+    <li><a href="/framework/create_mutants">Create the mutants</a></li>
+    <li><a href="/framework/mutants_answers">Get the answers for the mutants</a></li>
+    <li><a href="/framework/results_stats">Get robustness stats</a></li>
+    <li><a href="/framework/results_detailed">Get detailed results</a></li>
+</ul>
+{% endblock %}
+
+
+{% block content %}{% endblock %}
+
+</body>
+</html>

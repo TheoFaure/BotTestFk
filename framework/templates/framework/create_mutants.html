@@ -1,0 +1,25 @@
+
+{% extends "framework/base.html" %}
+
+{% block title %}Create mutants - BotTestFk{% endblock %}
+
+
+{% block content %}
+
+<h1>Create mutants</h1>
+
+<form action="/framework/create_mutants/" method="POST">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Submit" />
+</form>
+    {% if nb_mutants != -1 %}
+        {{ nb_mutants }} new mutants created
+    {% endif %}
+
+    <br/>
+
+    <span id="nb_missing_answers">{{ nb_missing_answers }}</span> missing answers for the mutants.
+{#    <button onclick="compute_mut_answers()">Compute missing answers</button>#}
+{#    <span id="error"></span>#}
+{% endblock %}

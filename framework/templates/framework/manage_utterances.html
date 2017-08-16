@@ -1,0 +1,16 @@
+
+{% extends "framework/base.html" %}
+
+{% block title %}Manage utterances - BotTestFk{% endblock %}
+
+{% block content %}
+
+<h1>Add Utterances</h1>
+
+<form action="/framework/manage_utterances/" method="POST">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Submit" />
+</form>
+
+{% endblock %}
