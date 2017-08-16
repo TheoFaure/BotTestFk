@@ -8,7 +8,7 @@ import six
 import requests
 from google.cloud import language
 import apiai
-
+import os
 
 #### API CALLS ####
 ###################
@@ -17,13 +17,20 @@ import apiai
 ###################
 
 
-yandex_api_key = open('/home/theo/Projects/MuTest/api_keys/yandex_translation').readline()
-translation_api_key = open('/home/theo/Projects/MuTest/api_keys/microsoft_translation').readline()
-token_translation = ''
-luisai_key = open('/home/theo/Projects/MuTest/api_keys/luisai').readline()
-apiai_token = open('/home/theo/Projects/MuTest/api_keys/apiai').readline()
-google_trans_token = open('/home/theo/Projects/MuTest/api_keys/google_translation').readline()
+# yandex_api_key = open('/home/theo/Projects/MuTest/api_keys/yandex_translation').readline()
+# translation_api_key = open('/home/theo/Projects/MuTest/api_keys/microsoft_translation').readline()
+# token_translation = ''
+# luisai_key = open('/home/theo/Projects/MuTest/api_keys/luisai').readline()
+# apiai_token = open('/home/theo/Projects/MuTest/api_keys/apiai').readline()
+# google_trans_token = open('/home/theo/Projects/MuTest/api_keys/google_translation').readline()
 # spellcheck_microsoft_key = open('~/Projects/MuTests/api_keys/microsoft_spellcheck').readline()
+
+translation_api_key = os.environ.get('MICROSOFT_TRANSLATION')
+token_translation = ''
+yandex_api_key = os.environ.get('YANDEX_TRANSLATION')
+luisai_key = os.environ.get('LUIS_AI')
+apiai_token = os.environ.get('APIAI')
+google_trans_token = os.environ.get('GOOGLE_TRANSLATION')
 
 
 def send_request(method, host, url, body=None, params=None, headers=None):
