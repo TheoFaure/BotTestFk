@@ -114,7 +114,7 @@ def results_stats(request):
     intents = Intent.objects.all()
     strategies = Strategy.objects.all()
 
-    tab = [["", "Original >"] + [i.__str__() for i in intents], ["Adversaries ︾", ""] + [Mutant.nb_mut_i_orig(i) for i in intents]]
+    tab = [["", "Original 🡢"] + [i.__str__() for i in intents], ["Adversaries 🡣", ""] + [Mutant.nb_mut_i_orig(i) for i in intents]]
 
     middle = [["", ""] + [Mutant.nb_mut_i_orig_mutated_to_i_mut(i_orig, i_mut) for i_mut in intents] for i_orig in intents]
     for line in middle:
