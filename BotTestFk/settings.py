@@ -26,7 +26,7 @@ SECRET_KEY = ')vw6@66v7r9p0tofgtgw@5=d#vz^z6p07x41wto)=q-rzb!%@l'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['conv-agents-testing-fk.herokuapp.com']
 
 
 # Application definition
