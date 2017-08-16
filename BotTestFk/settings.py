@@ -26,7 +26,7 @@ SECRET_KEY = ')vw6@66v7r9p0tofgtgw@5=d#vz^z6p07x41wto)=q-rzb!%@l'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['conv-agents-testing-fk.herokuapp.com']
+ALLOWED_HOSTS = ['conv-agents-testing-fk.herokuapp.com', '127.0.0.1']
 
 
 # Application definition
@@ -75,12 +75,13 @@ WSGI_APPLICATION = 'BotTestFk.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
+DB_PASSWORD = os.environ.get('DB_PASSWORD')
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'd1tg3q22b6lvhd',
         'USER': 'zotgkhgqxghozv',
-        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'PASSWORD': DB_PASSWORD,
         'HOST': 'ec2-23-23-248-162.compute-1.amazonaws.com',
         'PORT': '5432',
     }

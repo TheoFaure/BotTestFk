@@ -69,19 +69,6 @@ class Intent(models.Model):
         return "{}.{}".format(self.application, self.action)
 
     @property
-    def robustness(self):
-        '''Property. Computes the average robustness for each utterance that has this intent.'''
-        robustness = 0
-        utt = Utterance.objects.filter(answer__intent=self)
-        print(self.__str__(), utt.count())
-        if utt.count() > 0:
-            for u in utt:
-                robustness += u.intent_robustness
-            return round(robustness / utt.count(), 2)
-        else:
-            return 0
-
-    @property
     def nb_mut_ans(self):
         '''Property. The number of mutants that have an answer,
         and for which the answer to the utterance as this intent.'''
@@ -127,21 +114,9 @@ class Strategy(models.Model):
     - adding the strategy in the dispatcher in the Utterance class
     '''
     name = models.CharField(max_length=200)
+    intent_robustness = models.FloatField(null=True, blank=True)
     def __str__(self):
         return self.name
-
-    @property
-    def intent_robustness(self):
-        '''Property. The intent robustness for this strategy.'''
-        robustness = 0
-        utt = Utterance.objects.filter(mutant__strategy=self, mutant__answer__isnull=False).distinct()
-        print(self.__str__(), utt.count())
-        if utt.count() > 0:
-            for u in utt:
-                robustness += u.intent_robustness_for_strat(self)
-            return round(robustness / utt.count(), 2)
-        else:
-            return 0
 
     @property
     def nb_mut_ans(self):
@@ -152,6 +127,22 @@ class Strategy(models.Model):
     def nb_mut_without_ans(self):
         '''Property. Number of mutants created with this strategy, that DON'T have an answer.'''
         return Mutant.objects.filter(strategy=self, answer__isnull=True).count()
+
+    def update_intent_robustness_per_strat(self):
+        intents = Intent.objects.all()
+        robustness = 0
+        for i in intents:
+            x = Mutant.objects.filter(answer__intent=i,
+                                      utterance__answer__intent=i,
+                                      strategy=self).count()
+            z = Mutant.objects.filter(utterance__answer__intent=i,
+                                      strategy=self,
+                                      answer__isnull=False).count()
+            if z != 0:
+                robustness += (x/z)
+        robustness /= intents.count()
+        self.intent_robustness = round(robustness, 2)
+        self.save()
 
 
 class Validation(models.Model):
@@ -185,6 +176,7 @@ class Utterance(models.Model):
     expected_intent = models.ForeignKey(Intent, on_delete=models.CASCADE, default=1) # 1 is the pk for "None"
     answer = models.ForeignKey(Answer, on_delete=models.CASCADE, null=True, blank=True)
     entity_robustness = models.FloatField(null=True, blank=True)
+    intent_robustness = models.FloatField(null=True, blank=True)
 
     dispatcher_mutations = {"homophones": mutation_homophones,
                             "swapletter": mutation_swap_letter,
@@ -245,9 +237,8 @@ class Utterance(models.Model):
 
         return nb_mutants_created
 
-    @property
-    def intent_robustness(self):
-        '''Property. Robustness on the intent for this utterance.'''
+    def update_intent_robustness(self):
+        '''Robustness on the intent for this utterance.'''
         m_with_good_int = Mutant.objects.filter(utterance=self,
                                      answer__intent=self.answer.intent,
                                      utterance__answer__intent=self.answer.intent).count()
@@ -255,12 +246,13 @@ class Utterance(models.Model):
                                         utterance__answer__intent=self.answer.intent,
                                         answer__isnull=False).count()
         if total_m == 0:
-            return 1
+            self.intent_robustness = 1
         else:
-            return m_with_good_int / total_m
+            self.intent_robustness = round(m_with_good_int / total_m, 2)
+        self.save()
 
     def update_entity_robustness(self):
-        '''Property. Robustness of the entities for this utterance'''
+        '''Robustness of the entities for this utterance'''
         if self.mutant_set.count() > 0:
             score = 0
             for m in self.mutant_set.all():
@@ -270,18 +262,6 @@ class Utterance(models.Model):
             self.entity_robustness = 1
 
         self.save()
-
-    def intent_robustness_for_strat(self, strat):
-        '''Used to compute intent robustness by strategy.'''
-        mutants_with_answer_for_strat = self.mutant_set.filter(answer__isnull=False, strategy=strat)
-        if mutants_with_answer_for_strat.count() > 0:
-            r = 0
-            for m in mutants_with_answer_for_strat:
-                if self.answer.intent == m.answer.intent:
-                    r += 1
-            return r / mutants_with_answer_for_strat.count()
-        else:
-            return 1
 
 
 class Mutant(models.Model):
@@ -339,19 +319,3 @@ class Mutant(models.Model):
     @staticmethod
     def intent_robustness_per_intent(i):
         return Mutant.nb_mut_i_orig_mutated_to_i_mut(i, i) / Mutant.nb_mut_i_orig(i)
-
-    @staticmethod
-    def intent_robustness_per_strat(s):
-        intents = Intent.objects.all()
-        robustness = 0
-        for i in intents:
-            x = Mutant.objects.filter(answer__intent=i,
-                                      utterance__answer__intent=i,
-                                      strategy=s).count()
-            z = Mutant.objects.filter(utterance__answer__intent=i,
-                                      strategy=s,
-                                      answer__isnull=False).count()
-            if z != 0:
-                robustness += (x/z)
-        robustness /= intents.count()
-        return robustness
