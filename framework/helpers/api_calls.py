@@ -30,7 +30,6 @@ token_translation = ''
 yandex_api_key = os.environ.get('YANDEX_TRANSLATION')
 luisai_key = os.environ.get('LUIS_AI')
 apiai_token = os.environ.get('APIAI')
-google_trans_token = os.environ.get('GOOGLE_TRANSLATION')
 
 
 def send_request(method, host, url, body=None, params=None, headers=None):
@@ -167,38 +166,3 @@ def syntax_text(text):
     #   document.doc_type == language.Document.HTML
     tokens = document.analyze_syntax().tokens
     return tokens
-
-
-def translate_google2(text, target):
-    # translate_client = translate.Client()
-    # if isinstance(text, six.binary_type):
-    #     text = text.decode('utf-8')
-    #
-    # translation = translate_client.translate(
-    #     text,
-    #     target_language=target)
-    #
-    # return translation['translatedText']
-    return "", ""
-
-
-def translate_google(text, source, target):
-    headers = {
-        'Authorization': 'Bearer {token}'.format(token=google_trans_token)
-    }
-
-    params = urllib.parse.urlencode({
-        'Content-Type': 'text/json'
-    })
-
-    body = ("{'q': \'%s\', 'source': \'%s\', 'target': \'%s\', 'format': 'text'}" % (text, source, target))
-
-    try:
-        data, headers, status = send_request("POST", 'translation.googleapis.com', "/language/translate/v2",
-                                             headers=headers, params=params, body=body)
-        json_obj = json.loads(data.decode('utf-8'))
-        return json_obj['data']['translations'][0]['translatedText']
-    except Exception as e:
-        print("Caught error: " + repr(e))
-        print(data, headers, status)
-        raise

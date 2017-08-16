@@ -78,12 +78,20 @@ WSGI_APPLICATION = 'BotTestFk.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'fkdb',
-        'USER': 'postgres',
-        'PASSWORD': 'coucou',
-        'HOST': '127.0.0.1',
+        'NAME': 'd1tg3q22b6lvhd',
+        'USER': 'zotgkhgqxghozv',
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': 'ec2-23-23-248-162.compute-1.amazonaws.com',
         'PORT': '5432',
     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': 'fkdb',
+    #     'USER': 'postgres',
+    #     'PASSWORD': 'coucou',
+    #     'HOST': '127.0.0.1',
+    #     'PORT': '5432',
+    # }
 }
 
 

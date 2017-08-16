@@ -4,7 +4,7 @@ import random
 import re
 import pickle
 import unicodedata
-from framework.helpers.api_calls import syntax_text, translate_google
+from framework.helpers.api_calls import syntax_text
 from framework.models.homophones import Word
 from BotTestFk import settings
 
