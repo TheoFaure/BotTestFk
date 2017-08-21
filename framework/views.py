@@ -4,7 +4,7 @@ from django.db.models import Avg
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from .models.models import Utterance, Intent, Mutant, Strategy
+from .models.models import Utterance, Intent, Mutant, Strategy, Entity
 from django.template import loader
 from .forms import UploadUtterancesForm, CreateMutantsForm, GetAnsMutantsForm
 from .helpers.helpers import add_utterances, create_mutants_helper
@@ -147,12 +147,21 @@ def results_stats(request):
     print(5)
     general_robustness = round(sum([Mutant.intent_robustness_per_intent(i) for i in intents])/intents.count(), 3)
     print(6)
+
+    distinct_types = Entity.objects.all().distinct("type").values("type")
+    array_distinct_types = [t['type'] for t in distinct_types]
+    type_robustness = [Entity.objects.filter(answer__mutant__utterance__answer__entity__type__contains=t, type__contains=t).count() /
+                       Entity.objects.filter(answer__mutant__utterance__answer__entity__type__contains=t).count()
+                       for t in array_distinct_types]
+
+
     context = {'nb_utt_per_int': array_accuracy,
                'general_accuracy': general_accuracy,
                'nb_utt': Utterance.objects.all().count(),
                'rob_per_strat': robustness_per_strategy,
                'tab': array_robustness_per_intent,
-               'general_robustness': general_robustness}
+               'general_robustness': general_robustness,
+               'type_robustness': type_robustness}
     return HttpResponse(template.render(context, request))
 
 
