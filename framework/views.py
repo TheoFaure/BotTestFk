@@ -150,8 +150,8 @@ def results_stats(request):
 
     distinct_types = Entity.objects.all().distinct("type").values("type")
     array_distinct_types = [t['type'] for t in distinct_types]
-    type_robustness = [(t, Entity.objects.filter(answer__mutant__utterance__answer__entity__type__contains=t, type__contains=t).count() /
-                       Entity.objects.filter(answer__mutant__utterance__answer__entity__type__contains=t).count())
+    type_robustness = [(t, round(Entity.objects.filter(answer__mutant__utterance__answer__entity__type__contains=t, type__contains=t).count() /
+                       Entity.objects.filter(answer__mutant__utterance__answer__entity__type__contains=t).count(), 2))
                        for t in array_distinct_types]
 
 
