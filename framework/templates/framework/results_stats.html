@@ -99,4 +99,18 @@
             </tr>
         {% endfor %}
     </table>
+
+    <h2>Entity robustness per type</h2>
+    <table id="strategy_robustness">
+    <tr>
+    <th scope="col">Entity type</th>
+    <th scope="col">Entity Robustness</th>
+    </tr>
+        {% for type, rob in type_robustness%}
+            <tr>
+                <td>{{ type }}</td>
+                <td>{{ rob }}</td>
+            </tr>
+        {% endfor %}
+    </table>
 {% endblock %}
