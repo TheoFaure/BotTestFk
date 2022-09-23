@@ -15,7 +15,7 @@ idna==2.5
 numpy==1.13.0
 packaging==16.8
 pandas==0.20.3
-protobuf==3.3.0
+protobuf==3.18.3
 pyasn1==0.2.3
 pyasn1-modules==0.0.9
 pyparsing==2.2.0
